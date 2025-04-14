@@ -28,11 +28,12 @@ class ProdukResource extends Resource
                 TextInput::make('nama_produk')
                 ->required(),
                 TextInput::make('harga')
-                ->required()
-                ->numeric(),
+                ->numeric()
+                ->prefix('Rp')
+                ->required(),
                 TextInput::make('stok')
-                ->required()
-                ->numeric(),
+                ->numeric()
+                ->required(),
             ]);
     }
 
