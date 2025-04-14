@@ -30,10 +30,13 @@ class UserResource extends Resource
                     ->required(),
                 TextInput::make('email')
                     ->required()
-                    ->email(),
+                    ->email()
+                    ->disabledOn('edit'),
                 TextInput::make('password')
                     ->required()
-                    ->password()->revealable(),
+                    ->password()
+                    ->revealable()
+                    ->hiddenOn('edit'),
                 Select::make('role')
                     ->options([
                         'pelanggan' => "Pelanggan",
