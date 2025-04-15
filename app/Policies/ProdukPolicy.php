@@ -15,7 +15,10 @@ class ProdukPolicy
     {
         return $user->email == 'michael@owner.com'
         || $user->role == 'administrator'
-        || $user->role == 'supervisor';
+        || $user->role == 'supervisor'
+        || $user->role == 'kasir'
+        || $user->role == 'pelanggan';
+
     }
 
     /**
@@ -25,8 +28,7 @@ class ProdukPolicy
     {
         return $user->email == 'michael@owner.com'
         || $user->role == 'administrator'
-        || $user->role == 'supervisor'
-        || $user->role == 'kasir';
+        || $user->role == 'supervisor';
     }
 
     /**
