@@ -5,57 +5,76 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
-use App\Models\Penjualan;
+use App\Models\Transaksi;
+use App\Models\Pelanggan;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TransaksiResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\TransaksiResource\RelationManagers;
 
 class TransaksiResource extends Resource
 {
-    protected static ?string $model = Penjualan::class;
-    protected static ?string $label = 'Transaksi';
+    protected static ?string $model = Transaksi::class;
+    protected static ?string $label = 'Histori Transaksi';
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
+    protected static ?string $slug = 'histori-transaksi';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()->role == 'pelanggan') {
+            $userPhone = auth()->user()->nomor_telepon;
+            $pelangganIds = Pelanggan::where('nomor_telepon', $userPhone)->pluck('id');
+            return $query->whereIn('pelanggan_id', $pelangganIds);
+        }
+
+        return $query;
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\DatePicker::make('tanggal')
+                    ->label('Tanggal Transaksi')
+                    ->disabled(),
+
+                Forms\Components\Select::make('pelanggan_id')
+                    ->label('Pelanggan')
+                    ->relationship('pelanggan', 'nama_pelanggan')
+                    ->disabled(),
+
+                Forms\Components\TextInput::make('total_harga')
+                    ->label('Total Harga')
+                    ->disabled()
+                    ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.')),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->query(
-            function (Penjualan $record){
-                $noTelpUser = auth()->user()->nomor_telepon;
-                
-                return penjualan::query()->where('pelanggan_id', $noTelpUser);
-            }
-        )
-        ->columns([
-            TextColumn::make('tanggal')
-                ->dateTime('d F Y')
-                ->sortable(),
-            TextColumn::make('pelanggan.nama_pelanggan'),
-            TextColumn::make('total_harga')->money('IDR'),
-        ])
+            ->columns([
+                TextColumn::make('tanggal')
+                    ->date('d F Y')
+                    ->sortable(),
+
+                TextColumn::make('pelanggan.nama_pelanggan')
+                    ->label('Nama Pelanggan')
+                    ->searchable(),
+
+                TextColumn::make('total_harga')
+                    ->money('IDR')
+                    ->sortable(),
+            ])
+            ->defaultSort('tanggal', 'desc')
             ->filters([
-                //
+                // 
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\ViewAction::make(),
             ]);
     }
 
@@ -71,7 +90,7 @@ class TransaksiResource extends Resource
         return [
             'index' => Pages\ListTransaksis::route('/'),
             // 'create' => Pages\CreateTransaksi::route('/create'),
-            // 'edit' => Pages\EditTransaksi::route('/{record}/edit'),
+            // 'edit' => Pages\EditPenjualan::route('/{record}/edit'),
         ];
     }
 }
