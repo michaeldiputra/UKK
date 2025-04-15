@@ -30,6 +30,7 @@ class PelangganResource extends Resource
             TextInput::make('nomor_telepon')
                 ->required()
                 // ->prefix('+62')
+                ->unique()
                 ->tel(),
             Textarea::make('alamat')
                 ->required(),

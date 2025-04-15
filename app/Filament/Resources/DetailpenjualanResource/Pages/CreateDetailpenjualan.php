@@ -7,6 +7,7 @@ use Illuminate\Support\Js;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\DetailpenjualanResource;
+use App\Filament\Resources\DetailpenjualanResource\Widgets\DetailpenjualanWidget;
 
 class CreateDetailpenjualan extends CreateRecord
 {
@@ -33,6 +34,20 @@ class CreateDetailpenjualan extends CreateRecord
             'filament.admin.resources.detailpenjualans.create',
             ['penjualan_id' => $id]
         );
+    }
+
+    public function getFooterWidgetsColumns(): int
+    {
+        return 1;
+    }
+
+    public function getFooterWidgets(): array
+    {
+        return [
+            DetailpenjualanWidget::make([
+                'record' => request('penjualan_id')
+            ])
+        ];
     }
 
 }

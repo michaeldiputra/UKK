@@ -34,6 +34,7 @@ class DetailpenjualanResource extends Resource
                     ->default(request('penjualan_id'))
                     ->dehydrated(),
                 Select::make('produk_id')
+                    ->label('Nama Produk')
                     ->options(
                         \App\Models\Produk::pluck('nama_produk', 'id')
                     )
@@ -51,12 +52,18 @@ class DetailpenjualanResource extends Resource
                     ->required(),
                 TextInput::make('jumlah_produk')
                     ->numeric()
-                    ->default('1')
+                    // ->default('1')
                     ->minValue('1')
                     ->maxValue(function ($get) {
                         $produkId = $get('produk_id');
                         $produk = \App\Models\Produk::find($produkId);
                         return $produk ? $produk->stok : 0;
+                    })
+                    ->label(function ($get) {
+                        $produkId = $get('produk_id');
+                        $produk = \App\Models\Produk::find($produkId);
+                        $stok = $produk ? $produk->stok : 0;
+                        return ('Jumlah Produk (Stok:' . $stok .')');
                     })
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
@@ -84,12 +91,16 @@ class DetailpenjualanResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('produk.nama_produk'),
-                TextColumn::make('jumlah_produk'),
+                TextColumn::make('produk.nama_produk')
+                ->label('Nama Produk'),
+                TextColumn::make('jumlah_produk')
+                ->label('Jumlah Produk'),
                 TextColumn::make('produk.harga')
-                    ->money('IDR'),
+                    ->money('IDR')
+                    ->label('Harga Produk'),
                 TextColumn::make('subtotal')
                     ->money('IDR'),
+                TextColumn::make(''),
                 TextColumn::make(''),
                 TextColumn::make(''),
                 TextColumn::make(''),
