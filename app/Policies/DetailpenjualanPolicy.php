@@ -60,6 +60,10 @@ class DetailpenjualanPolicy
         return $user->email == 'michael@owner.com'
         || $user->role == 'administrator';
     }
+    public function deleteAny(User $user): bool
+    {
+        return $user->email == 'michael@owner.com';
+    }
 
     /**
      * Determine whether the user can restore the model.

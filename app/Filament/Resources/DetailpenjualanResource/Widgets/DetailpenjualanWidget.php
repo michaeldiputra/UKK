@@ -11,9 +11,9 @@ use Filament\Tables\Columns\Summarizers\Summarizer;
 
 class detailpenjualanWidget extends BaseWidget
 {
-    public $penjualanId;
     protected static ?string $heading = 'Daftar Produk';
-
+    
+    public $penjualanId;
     public function mount($record)
     {
         $this->penjualanId = $record;

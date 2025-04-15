@@ -58,6 +58,10 @@ class ProdukPolicy
         || $user->role == 'administrator'
         || $user->role == 'supervisor';
     }
+    public function deleteAny(User $user): bool
+    {
+        return $user->email == 'michael@owner.com';
+    }
 
     /**
      * Determine whether the user can restore the model.

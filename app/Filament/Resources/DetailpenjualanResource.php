@@ -8,11 +8,13 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Detailpenjualan;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Summarizer;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DetailpenjualanResource\Pages;
 use App\Filament\Resources\DetailpenjualanResource\RelationManagers;
@@ -23,9 +25,9 @@ class DetailpenjualanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    // protected static bool $shouldRegisterNavigation = false; //menyembunyikan navigation
+    protected static bool $shouldRegisterNavigation = false; //menyembunyikan navigation
     protected static ?string $label = 'Detail Penjualan';
-
+    
     public static function form(Form $form): Form
     {
         return $form
@@ -90,6 +92,13 @@ class DetailpenjualanResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                function (Detailpenjualan $record){
+                    $penjualanId = request('penjualan_id');
+                    
+                    return detailpenjualan::query()->where('penjualan_id', $penjualanId);
+                }
+            )
             ->columns([
                 TextColumn::make('produk.nama_produk')
                 ->label('Nama Produk'),
@@ -99,18 +108,20 @@ class DetailpenjualanResource extends Resource
                     ->money('IDR')
                     ->label('Harga Produk'),
                 TextColumn::make('subtotal')
-                    ->money('IDR'),
-                TextColumn::make(''),
-                TextColumn::make(''),
-                TextColumn::make(''),
-                TextColumn::make(''),
-                TextColumn::make(''),
+                    ->money('IDR')
+                    ->summarize(
+                        Summarizer::make()
+                            ->using(function ($query) {
+                                return $query->sum(DB::raw('subtotal'));
+                            })
+                            ->money('IDR')
+                    ),
             ])
             ->filters([
-                //
+                // 
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -131,7 +142,7 @@ class DetailpenjualanResource extends Resource
         return [
             'index' => Pages\ListDetailpenjualans::route('/'),
             'create' => Pages\CreateDetailpenjualan::route('/create'),
-            'edit' => Pages\EditDetailpenjualan::route('/{record}/edit'),
+            // 'edit' => Pages\EditDetailpenjualan::route('/{record}/edit'),
         ];
     }
 }

@@ -68,7 +68,13 @@ class PenjualanResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                ->url(
+                    fn(Penjualan $record): string =>
+                    // route('filament.admin.resources.detailpenjualans.index') . '?tableFilters[penjualan_id][value]='. $record->id
+                    route('filament.admin.resources.detailpenjualans.index', ['penjualan_id' => $record->id])
+                ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
