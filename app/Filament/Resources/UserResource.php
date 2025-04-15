@@ -43,7 +43,9 @@ class UserResource extends Resource
                         'kasir' => "Kasir",
                         'administrator' => "Administrator",
                         'supervisor' => "Supervisor"
-                    ])
+                    ]),
+                TextInput::make('nomor_telepon')
+                    ->required(),
             ]);
     }
 
