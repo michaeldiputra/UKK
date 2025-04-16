@@ -33,6 +33,7 @@ class PelangganResource extends Resource
                 ->unique()
                 ->tel(),
             Textarea::make('alamat')
+                ->columnSpanFull()
                 ->required(),
         ];
     }
@@ -47,9 +48,12 @@ class PelangganResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nama_pelanggan'),
-                TextColumn::make('nomor_telepon'),
-                TextColumn::make('alamat'),
+                TextColumn::make('nama_pelanggan')
+                    ->searchable(),
+                TextColumn::make('nomor_telepon')
+                    ->searchable(),
+                TextColumn::make('alamat')
+                    ->searchable(),
             ])
             ->filters([
                 //

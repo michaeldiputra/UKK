@@ -42,7 +42,7 @@ class TransaksiResource extends Resource
         return $form
             ->schema([
                 DatePicker::make('tanggal')
-                    ->label('Tanggal Transaksi')
+                    ->label('Tanggal transaksi')
                     ->disabled(),
 
                 Select::make('pelanggan_id')
@@ -51,7 +51,7 @@ class TransaksiResource extends Resource
                     ->disabled(),
 
                 TextInput::make('total_harga')
-                    ->label('Total Harga')
+                    ->label('Total harga')
                     ->disabled()
                     ->columnSpanFull()
                     ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.')),
@@ -64,10 +64,11 @@ class TransaksiResource extends Resource
             ->columns([
                 TextColumn::make('tanggal')
                     ->date('d F Y')
+                    ->searchable()
                     ->sortable(),
 
                 TextColumn::make('pelanggan.nama_pelanggan')
-                    ->label('Nama Pelanggan')
+                    ->label('Nama pelanggan')
                     ->searchable(),
 
                 TextColumn::make('total_harga')

@@ -26,14 +26,15 @@ class ProdukResource extends Resource
         return $form
             ->schema([
                 TextInput::make('nama_produk')
-                ->required(),
+                    ->required(),
                 TextInput::make('harga')
-                ->numeric()
-                ->prefix('Rp')
-                ->required(),
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->numeric()
+                    ->required(),
                 TextInput::make('stok')
-                ->numeric()
-                ->required(),
+                    ->numeric()
+                    ->required(),
             ]);
     }
 
@@ -41,9 +42,13 @@ class ProdukResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nama_produk'),
-                TextColumn::make('harga'),
-                TextColumn::make('stok'),
+                TextColumn::make('nama_produk')
+                    ->searchable(),
+                TextColumn::make('harga')
+                    ->money('IDR')
+                    ->searchable(),
+                TextColumn::make('stok')
+                    ->sortable(),
             ])
             ->filters([
                 //

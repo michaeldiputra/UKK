@@ -35,6 +35,7 @@ class UserResource extends Resource
                 TextInput::make('password')
                     ->required()
                     ->password()
+                    ->default('password')
                     ->revealable()
                     ->hiddenOn('edit'),
                 Select::make('role')

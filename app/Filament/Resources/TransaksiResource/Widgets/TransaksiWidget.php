@@ -26,9 +26,9 @@ class TransaksiWidget extends BaseWidget
             )
             ->columns([
                 TextColumn::make('produk.nama_produk')
-                    ->label('Nama Produk'),
+                    ->label('Nama produk'),
                 TextColumn::make('jumlah_produk')
-                    ->label('Jumlah Produk'),
+                    ->label('Jumlah produk'),
                 TextColumn::make('produk.harga')
                     ->label('Harga')
                     ->money('IDR'),

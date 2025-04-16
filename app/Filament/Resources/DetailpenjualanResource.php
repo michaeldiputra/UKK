@@ -27,7 +27,7 @@ class DetailpenjualanResource extends Resource
 
     protected static bool $shouldRegisterNavigation = false; //menyembunyikan navigation
     protected static ?string $label = 'Detail Penjualan';
-    
+
     public static function form(Form $form): Form
     {
         return $form
@@ -65,7 +65,7 @@ class DetailpenjualanResource extends Resource
                         $produkId = $get('produk_id');
                         $produk = \App\Models\Produk::find($produkId);
                         $stok = $produk ? $produk->stok : 0;
-                        return ('Jumlah Produk (Stok:' . $stok .')');
+                        return ('Jumlah Produk (Stok:' . $stok . ')');
                     })
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
@@ -93,17 +93,17 @@ class DetailpenjualanResource extends Resource
     {
         return $table
             ->query(
-                function (Detailpenjualan $record){
+                function (Detailpenjualan $record) {
                     $penjualanId = request('penjualan_id');
-                    
+
                     return detailpenjualan::query()->where('penjualan_id', $penjualanId);
                 }
             )
             ->columns([
                 TextColumn::make('produk.nama_produk')
-                ->label('Nama Produk'),
+                    ->label('Nama produk'),
                 TextColumn::make('jumlah_produk')
-                ->label('Jumlah Produk'),
+                    ->label('Jumlah Produk'),
                 TextColumn::make('produk.harga')
                     ->money('IDR')
                     ->label('Harga Produk'),

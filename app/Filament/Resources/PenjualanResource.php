@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use App\Models\Penjualan;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
@@ -59,13 +60,27 @@ class PenjualanResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('tanggal')
+                    ->searchable()
                     ->dateTime('d F Y')
                     ->sortable(),
-                TextColumn::make('pelanggan.nama_pelanggan'),
-                TextColumn::make('total_harga')->money('IDR'),
-            ])
+                TextColumn::make('pelanggan.nama_pelanggan')
+                    ->searchable(),
+                TextColumn::make('total_harga')
+                ->money('IDR')
+                ->searchable(),
+                ])
             ->filters([
-                //
+                Filter::make('tanggal')
+                    ->form([
+                        DatePicker::make('tanggal')
+                            ->label('Tanggal')
+                            ->required()
+                            ->default(now())
+                            ->columnSpanFull(),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->whereDate('tanggal', $data['tanggal']);
+                    }),
             ])
             ->actions([
                 // Tables\Actions\EditAction::make(),
