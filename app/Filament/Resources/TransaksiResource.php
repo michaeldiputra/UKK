@@ -9,7 +9,11 @@ use App\Models\Transaksi;
 use App\Models\Pelanggan;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TransaksiResource\Pages;
 
@@ -37,18 +41,19 @@ class TransaksiResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\DatePicker::make('tanggal')
+                DatePicker::make('tanggal')
                     ->label('Tanggal Transaksi')
                     ->disabled(),
 
-                Forms\Components\Select::make('pelanggan_id')
+                Select::make('pelanggan_id')
                     ->label('Pelanggan')
                     ->relationship('pelanggan', 'nama_pelanggan')
                     ->disabled(),
 
-                Forms\Components\TextInput::make('total_harga')
+                TextInput::make('total_harga')
                     ->label('Total Harga')
                     ->disabled()
+                    ->columnSpanFull()
                     ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.')),
             ]);
     }
@@ -89,7 +94,7 @@ class TransaksiResource extends Resource
     {
         return [
             'index' => Pages\ListTransaksis::route('/'),
-            // 'create' => Pages\CreateTransaksi::route('/create'),
+            'view' => Pages\ViewTransaksi::route('/{record}'),
             // 'edit' => Pages\EditPenjualan::route('/{record}/edit'),
         ];
     }
